@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Sentinela</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      background: linear-gradient(
+        135deg,
+        #00bfa6,
+        #00a9c7,
+        #007f9e
+      );
+    }
+
+    .container {
+      width: 380px;
+      padding: 35px;
+
+      background: white;
+
+      border-radius: 24px;
+
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+
+      text-align: center;
+    }
+
+    .logo {
+      width: 240px;
+      max-width: 100%;
+      height: auto;
+
+      display: block;
+
+      margin: 0 auto 25px;
+    }
+
+    input {
+      width: 100%;
+
+      padding: 14px 16px;
+
+      margin-bottom: 16px;
+
+      border: 2px solid #d5eeee;
+
+      border-radius: 10px;
+
+      font-size: 15px;
+
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #00bfa6;
+
+      box-shadow: 0 0 8px rgba(0, 191, 166, 0.25);
+    }
+
+    input::placeholder {
+      color: #8a9a9a;
+    }
+
+    button {
+      width: 100%;
+
+      padding: 14px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      background: linear-gradient(
+        135deg,
+        #00bfa6,
+        #009bb5
+      );
+
+      color: white;
+
+      font-size: 16px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+
+      box-shadow: 0 8px 20px rgba(0, 155, 181, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 450px) {
+
+      .container {
+        width: 90%;
+        padding: 30px 25px;
+      }
+
+      .logo {
+        width: 210px;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <img
+      src="img/ChatGPT Image 17_08_2026, 11_22_01.png"
+      alt="Sentilena"
+      class="logo"
+    >
+
+    <input
+      id="usuario"
+      type="text"
+      placeholder="Usuário"
+    >
+
+    <input
+      id="senha"
+      type="password"
+      placeholder="Senha"
+    >
+
+    <button onclick="login()">
+      Entrar
+    </button>
+
+  </div>
+
+
+  <script>
+
+    function login() {
+
+      const usuario =
+        document.getElementById("usuario").value;
+
+      const senha =
+        document.getElementById("senha").value;
+
+
+      fetch("http://localhost:3000/login", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          usuario: usuario,
+          senha: senha
+        })
+
+      })
+
+      .then(response => response.json())
+
+      .then(data => {
+
+        if (data.tipo === "triagem") {
+          window.location.href = "triagem.html";
+        }
+
+        else if (data.tipo === "medico") {
+          window.location.href = "medico.html";
+        }
+
+        else if (data.tipo === "atendimento") {
+          window.location.href = "atendimento.html";
+        }
+
+      })
+
+      .catch(error => {
+
+        console.error("Erro ao fazer login:", error);
+
+      });
+
+    }
+
+  </script>
+
+</body>
+</html>
