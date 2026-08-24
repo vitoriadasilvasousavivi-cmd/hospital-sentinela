@@ -168,7 +168,7 @@
         document.getElementById("senha").value;
 
 
-      fetch("http://localhost:3000/login", {
+      fetch("/login", {
 
         method: "POST",
 
@@ -183,22 +183,15 @@
 
       })
 
-      .then(response => response.json())
+      .then(r => r.json())
 
       .then(data => {
 
-        if (data.tipo === "triagem") {
-          window.location.href = "triagem.html";
+        if (data.tipo === "triagem") .location.href = "triagem.html";
         }
-
-        else if (data.tipo === "medico") {
-          window.location.href = "medico.html";
-        }
-
-        else if (data.tipo === "atendimento") {
-          window.location.href = "atendimento.html";
-        }
-
+        if (data.tipo === "medico") .location.href = "medico.html";
+        if (data.tipo === "atendimento") .location.href= "atendimento";
+      
       })
 
       .catch(error => {
