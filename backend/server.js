@@ -5,59 +5,17 @@ const cors = require("cors");
 
 const app = express();
 
-// ===============================
-// CONFIGURAÇÕES
-// ===============================
-
 app.use(express.json());
 app.use(cors());
 
-// Pasta do frontend
+// FRONTEND
 app.use(express.static(path.join(__dirname, "../frontend")));
 
-// Banco de dados
+// BANCO DE DADOS
 const DB_FILE = path.join(__dirname, "db.json");
 
-// ===============================
-// BANCO DE DADOS
-// ===============================
-
 function readDB() {
-  try {
-    if (!fs.existsSync(DB_FILE)) {
-      const bancoInicial = {
-        usuarios: [],
-        pacientes: [],
-        triagens: [],
-        consultas: [],
-        tv_chamada: null,
-        tv_historico: []
-      };
-
-      fs.writeFileSync(
-        DB_FILE,
-        JSON.stringify(bancoInicial, null, 2)
-      );
-
-      return bancoInicial;
-    }
-
-    const db = JSON.parse(
-      fs.readFileSync(DB_FILE, "utf8")
-    );
-
-    if (!db.usuarios) db.usuarios = [];
-    if (!db.pacientes) db.pacientes = [];
-    if (!db.triagens) db.triagens = [];
-    if (!db.consultas) db.consultas = [];
-    if (!db.tv_chamada) db.tv_chamada = null;
-    if (!db.tv_historico) db.tv_historico = [];
-
-    return db;
-
-  } catch (erro) {
-    console.error("Erro ao ler banco de dados:", erro);
-
+  if (!fs.existsSync(DB_FILE)) {
     return {
       usuarios: [],
       pacientes: [],
@@ -67,22 +25,29 @@ function readDB() {
       tv_historico: []
     };
   }
+
+  const db = JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
+
+  if (!db.usuarios) db.usuarios = [];
+  if (!db.pacientes) db.pacientes = [];
+  if (!db.triagens) db.triagens = [];
+  if (!db.consultas) db.consultas = [];
+  if (!db.tv_chamada) db.tv_chamada = null;
+  if (!db.tv_historico) db.tv_historico = [];
+
+  return db;
 }
 
 function writeDB(data) {
-  try {
-    fs.writeFileSync(
-      DB_FILE,
-      JSON.stringify(data, null, 2)
-    );
-  } catch (erro) {
-    console.error("Erro ao salvar banco de dados:", erro);
-  }
+  fs.writeFileSync(
+    DB_FILE,
+    JSON.stringify(data, null, 2)
+  );
 }
 
-// ===============================
+// =========================
 // LOGIN
-// ===============================
+// =========================
 
 app.post("/login", (req, res) => {
   const db = readDB();
@@ -102,9 +67,9 @@ app.post("/login", (req, res) => {
   res.json(user);
 });
 
-// ===============================
+// =========================
 // ATENDIMENTO
-// ===============================
+// =========================
 
 app.post("/atendimento", (req, res) => {
   const db = readDB();
@@ -125,9 +90,9 @@ app.post("/atendimento", (req, res) => {
   res.json(paciente);
 });
 
-// ===============================
-// LISTAR PACIENTES
-// ===============================
+// =========================
+// PACIENTES
+// =========================
 
 app.get("/pacientes", (req, res) => {
   const db = readDB();
@@ -135,9 +100,9 @@ app.get("/pacientes", (req, res) => {
   res.json(db.pacientes);
 });
 
-// ===============================
+// =========================
 // TRIAGEM
-// ===============================
+// =========================
 
 app.post("/triagem", (req, res) => {
   const db = readDB();
@@ -173,9 +138,9 @@ app.post("/triagem", (req, res) => {
   res.json(triagem);
 });
 
-// ===============================
-// LISTAR TRIAGENS
-// ===============================
+// =========================
+// TRIAGENS
+// =========================
 
 app.get("/triagens", (req, res) => {
   const db = readDB();
@@ -183,9 +148,9 @@ app.get("/triagens", (req, res) => {
   res.json(db.triagens);
 });
 
-// ===============================
-// MÍDIA INDOOR - TV
-// ===============================
+// =========================
+// TV - CHAMAR PACIENTE
+// =========================
 
 app.post("/tv/chamar", (req, res) => {
   const db = readDB();
@@ -214,9 +179,9 @@ app.post("/tv/chamar", (req, res) => {
   res.json(chamada);
 });
 
-// ===============================
-// CONSULTAR CHAMADA DA TV
-// ===============================
+// =========================
+// TV - CONSULTAR CHAMADA
+// =========================
 
 app.get("/tv/chamada", (req, res) => {
   const db = readDB();
@@ -227,9 +192,9 @@ app.get("/tv/chamada", (req, res) => {
   });
 });
 
-// ===============================
+// =========================
 // LISTA DE MEDICAÇÕES
-// ===============================
+// =========================
 
 app.get("/lista-medicacoes", (req, res) => {
   res.json([
@@ -246,9 +211,9 @@ app.get("/lista-medicacoes", (req, res) => {
   ]);
 });
 
-// ===============================
-// CONSULTA MÉDICA
-// ===============================
+// =========================
+// CONSULTA
+// =========================
 
 app.post("/consulta", (req, res) => {
   const db = readDB();
@@ -269,9 +234,9 @@ app.post("/consulta", (req, res) => {
   res.json(consulta);
 });
 
-// ===============================
-// MEDICAÇÕES / CONSULTAS
-// ===============================
+// =========================
+// MEDICAÇÕES
+// =========================
 
 app.get("/medicacoes", (req, res) => {
   const db = readDB();
@@ -279,35 +244,24 @@ app.get("/medicacoes", (req, res) => {
   res.json(db.consultas);
 });
 
-// ===============================
+// =========================
 // TESTE DO SERVIDOR
-// ===============================
+// =========================
 
 app.get("/api/status", (req, res) => {
   res.json({
     status: "online",
-    sistema: "Sentinela",
-    mensagem: "Servidor funcionando corretamente"
+    sistema: "Sentinela"
   });
 });
 
-// ===============================
-// FRONTEND
-// ===============================
-
-app.get("*", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../frontend/index.html")
-  );
-});
-
-// ===============================
+// =========================
 // INICIAR SERVIDOR
-// ===============================
+// =========================
 
-// IMPORTANTE PARA O RENDER
+// IMPORTANTE: o Render fornece a porta através de process.env.PORT
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🏥 Sentinela rodando na porta ${PORT}`);
+  console.log(`🏥 Sentinela funcionando na porta ${PORT}`);
 });
