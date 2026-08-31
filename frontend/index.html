@@ -114,6 +114,7 @@
     }
 
     @media (max-width: 450px) {
+
       .container {
         width: 90%;
         padding: 30px 25px;
@@ -122,6 +123,7 @@
       .logo {
         width: 210px;
       }
+
     }
   </style>
 </head>
@@ -132,7 +134,7 @@
 
     <img
       src="img/ChatGPT Image 17_08_2026, 11_22_01.png"
-      alt="Sentinela"
+      alt="Sentilena"
       class="logo"
     >
 
@@ -154,22 +156,19 @@
 
   </div>
 
+
   <script>
 
     function login() {
 
       const usuario =
-        document.getElementById("usuario").value.trim();
+        document.getElementById("usuario").value;
 
       const senha =
         document.getElementById("senha").value;
 
-      if (!usuario || !senha) {
-        alert("Digite o usuário e a senha.");
-        return;
-      }
 
-      fetch("/login", {
+      fetch("http://localhost:3000/login", {
 
         method: "POST",
 
@@ -184,40 +183,20 @@
 
       })
 
-      .then(response => {
-
-        if (!response.ok) {
-          throw new Error("Login inválido");
-        }
-
-        return response.json();
-
-      })
+      .then(response => response.json())
 
       .then(data => {
 
         if (data.tipo === "triagem") {
-
           window.location.href = "triagem.html";
-
         }
 
         else if (data.tipo === "medico") {
-
           window.location.href = "medico.html";
-
         }
 
         else if (data.tipo === "atendimento") {
-
           window.location.href = "atendimento.html";
-
-        }
-
-        else {
-
-          alert("Tipo de usuário não reconhecido.");
-
         }
 
       })
@@ -225,8 +204,6 @@
       .catch(error => {
 
         console.error("Erro ao fazer login:", error);
-
-        alert("Usuário ou senha incorretos.");
 
       });
 
