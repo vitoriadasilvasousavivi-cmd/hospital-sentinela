@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -114,7 +114,6 @@
     }
 
     @media (max-width: 450px) {
-
       .container {
         width: 90%;
         padding: 30px 25px;
@@ -123,7 +122,6 @@
       .logo {
         width: 210px;
       }
-
     }
   </style>
 </head>
@@ -134,7 +132,7 @@
 
     <img
       src="img/ChatGPT Image 17_08_2026, 11_22_01.png"
-      alt="Sentilena"
+      alt="Sentinela"
       class="logo"
     >
 
@@ -156,17 +154,20 @@
 
   </div>
 
-
   <script>
 
     function login() {
 
       const usuario =
-        document.getElementById("usuario").value;
+        document.getElementById("usuario").value.trim();
 
       const senha =
         document.getElementById("senha").value;
 
+      if (!usuario || !senha) {
+        alert("Digite o usuário e a senha.");
+        return;
+      }
 
       fetch("/login", {
 
@@ -183,19 +184,49 @@
 
       })
 
-      .then(r => r.json())
+      .then(response => {
+
+        if (!response.ok) {
+          throw new Error("Login inválido");
+        }
+
+        return response.json();
+
+      })
 
       .then(data => {
 
-        if (data.tipo === "triagem") .location.href = "triagem.html";
-        if (data.tipo === "medico") .location.href = "medico.html";
-        if (data.tipo === "atendimento") .location.href= "atendimento";
-      
+        if (data.tipo === "triagem") {
+
+          window.location.href = "triagem.html";
+
+        }
+
+        else if (data.tipo === "medico") {
+
+          window.location.href = "medico.html";
+
+        }
+
+        else if (data.tipo === "atendimento") {
+
+          window.location.href = "atendimento.html";
+
+        }
+
+        else {
+
+          alert("Tipo de usuário não reconhecido.");
+
+        }
+
       })
 
       .catch(error => {
 
         console.error("Erro ao fazer login:", error);
+
+        alert("Usuário ou senha incorretos.");
 
       });
 
